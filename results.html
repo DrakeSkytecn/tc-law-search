@@ -129,51 +129,58 @@
         var dataObject
         function change_page_index(i) {
           page_index = i
-        dataObject = {
-          from: page_index,
-          size: page_item_size,
-          highlight: {
-            fields: {
-              case_content: {}
-            }
-          },
-          _source: {
-    includes: [
-      "case_name"
-    ],
-    excludes: []
-  },
-          query: {
-            bool: {
-              filter: [{
-                bool: {
-                  must: [{
-                    match_phrase: {
-                      case_content: {
-                        query: wo3,
-                        slop: slop,
-                        zero_terms_query: "NONE",
-                        boost: 1
-                      }
-                    }
-                  }],
-                  adjust_pure_negative: true,
-                  boost: 1
-                }
-              }],
-              adjust_pure_negative: true,
-              boost: 1
-            }
-          }
-        };
+          dataObject = {
+            keyword: wo3,
+            slop: slop,
+            page_index: page_index,
+            page_item_size: page_item_size
+          };
+  //       dataObject = {
+  //         from: page_index,
+  //         size: page_item_size,
+  //         highlight: {
+  //           fields: {
+  //             case_content: {}
+  //           }
+  //         },
+  //         _source: {
+  //   includes: [
+  //     "case_name"
+  //   ],
+  //   excludes: []
+  // },
+  //         query: {
+  //           bool: {
+  //             filter: [{
+  //               bool: {
+  //                 must: [{
+  //                   match_phrase: {
+  //                     case_content: {
+  //                       query: wo3,
+  //                       slop: slop,
+  //                       zero_terms_query: "NONE",
+  //                       boost: 1
+  //                     }
+  //                   }
+  //                 }],
+  //                 adjust_pure_negative: true,
+  //                 boost: 1
+  //               }
+  //             }],
+  //             adjust_pure_negative: true,
+  //             boost: 1
+  //           }
+  //         }
+  //       };
         };
         change_page_index(0);
 
-          $.ajax("http://localhost:8082/wenshu/_search", {
+          $.ajax("http://localhost:8082/api/search", {
           type: "POST",
-          contentType: "application/json",
+          // contentType: "application/json",
           dataType: "json",
           data: JSON.stringify(dataObject),
+          async: true,
           success: function(data) {
             $('.resultCounter').html((data.hits.total) + "条结果" + "<nobr>（"+ (data.took / 1000) +" 秒）&nbsp;</nobr>")
             // var items = data.hits.hits
@@ -216,9 +223,9 @@
           } else {
             change_page_index(indicator_index - 1 + (page_item_size - 1) * (indicator_index - 1));
           }
-          $.ajax("http://localhost:8082/wenshu/_search", {
+          $.ajax("http://localhost:8082/api/search", {
           type: "POST",
-          contentType: "application/json",
+          // contentType: "application/json",
           dataType: "json",
           data: JSON.stringify(dataObject),
           success: function(data) {

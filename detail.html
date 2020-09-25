@@ -76,21 +76,11 @@ Copyright @ 天储科技
   var wo2 = wo1.indexOf("=");
   var wo3 = decodeURI(wo1.substring(wo2 + 1, wo1.length));
   var dataObject = {
-  query: {
-    bool: {
-      must: [
-        {
-          match: {
-            id: wo3
-          }
-        }
-      ]
-    }
-  }
+    id: wo3
 };
-    $.ajax("http://localhost:8082/wenshu/_search", {
+    $.ajax("http://localhost:8082/api/detail", {
           type: "POST",
-          contentType: "application/json",
+          // contentType: "application/json",
           dataType: "json",
           data: JSON.stringify(dataObject),
           success: function(data) {
